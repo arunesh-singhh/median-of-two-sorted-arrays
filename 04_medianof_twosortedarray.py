@@ -3,7 +3,6 @@ class Solution:
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
         nums3 = sorted(nums1 + nums2)
         length = len(nums3)
-
         half = (len(nums3) + 1) // 2
 
         if length % 2 == 0:
@@ -42,3 +41,33 @@ class Solution:
                 high = px - 1
             else:
                 low = px + 1
+
+#approach-3
+class Solution:
+    def findMedianSortedArrays(self, num1: List[int], num2: List[int]) -> float:
+        a, b = num1, num2
+        total = len(num1) + len(num2)
+        half = total // 2
+
+        if len(b) < len(a):
+            a, b = b, a
+
+        l, r = 0, len(a) - 1
+        while True:
+            px = (l + r) // 2   # a
+            py = half - px - 2   # b
+
+            aleft = a[px] if px >= 0 else float("-inf")
+            aright = a[px + 1] if (px + 1) < len(a) else float("inf")
+            bleft = b[py] if py >= 0 else float("-inf")
+            bright = b[py + 1] if (py + 1) < len(b) else float("inf")
+
+            if aleft <= bright and bleft <= aright:    # check partition is correct
+                if total % 2:    # odd
+                    return min(aright, bright)
+                else:      # even
+                    return(max(aleft, bleft) + min(aright, bright)) / 2
+            elif aleft > bright:
+                r = px - 1
+            else:
+                l = px + 1
